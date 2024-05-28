@@ -1,23 +1,25 @@
 import logo from "./logo.svg";
+import { useState } from "react";
 import "./App.css";
 import "./firebase.utils.js";
+import { signInWithGoogle, signOutOfGoogle } from "./firebase.utils.js";
 function App() {
+  const [isSignedIn, setIsSignedIn] = useState(false);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button
+        onClick={async (e) => {
+          if (isSignedIn) {
+            await signOutOfGoogle();
+            setIsSignedIn(false);
+          } else {
+            const { user } = await signInWithGoogle();
+            setIsSignedIn(true);
+          }
+        }}
+      >
+        {isSignedIn ? "Sign Out" : "Sign In"}
+      </button>
     </div>
   );
 }
